@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { Box, Button, CircularProgress } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import type { IUserFormSchema } from "./interfaces";
 import { formConfig } from "./form-schema-config";
 import { Check } from "@mui/icons-material";
@@ -23,6 +29,8 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
   const { user } = props;
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const initialValues = formConfig.reduce<FormData>((acc, field) => {
     acc[field.name] = "";
     return acc;
@@ -107,7 +115,7 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
         flexDirection="column"
         gap={3}
         width="100%"
-        sx={{ flexDirection: { xs: "column", md: "row" } }}
+        sx={{ flexDirection: { xs: "column", md: "column" } }}
       >
         {formConfig.map((field: IUserFormSchema) => {
           const Component = field.componet;
@@ -139,14 +147,14 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
             display: "flex",
             flexDirection: { xs: "column", sm: "row" },
             gap: 2,
-            width: "100%",
+            width: { xs: "100%", sm: "50%" },
           }}
         >
           <Button
             variant="contained"
             color="primary"
             type="submit"
-            sx={{ columnGap: 1, width: "100%" }}
+            sx={{ columnGap: 1, width: !user || isMobile ? "100%" : "50%" }}
           >
             <div>Submit</div>
             {submitted && <Check />}
