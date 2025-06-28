@@ -80,7 +80,6 @@ export default function UserList() {
       flex: 1,
       align: "center",
       renderCell: (params) => {
-        console.log(params);
         const { id } = params;
         return (
           <Box
