@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, CircularProgress } from "@mui/material";
 import type { IUserFormSchema } from "./interfaces";
 import { formConfig } from "./form-schema-config";
@@ -8,7 +8,19 @@ import axios from "axios";
 type FormData = Record<string, string>;
 type FormErrors = Record<string, string>;
 
-const DynamicUserForm: React.FC = () => {
+interface IDynamicUserFormProps {
+  user?: FormData;
+}
+
+const getInitialData = (initialValues: FormData, user?: FormData) => {
+  if (user) {
+    return user;
+  }
+  return initialValues;
+};
+
+const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
+  const { user } = props;
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const initialValues = formConfig.reduce<FormData>((acc, field) => {
@@ -57,22 +69,26 @@ const DynamicUserForm: React.FC = () => {
     e.preventDefault();
     if (validate() && !submitted) {
       setLoading(true);
-      console.log("Form Submitted:", formData);
-
       try {
-        const response = await axios.post(
-          "http://localhost:3000/users",
-          formData
-        );
-        console.log("User created:", response.data);
+        if (formData.id) {
+          await axios.put(
+            `http://localhost:3000/users/${formData.id}`,
+            formData
+          );
+        } else {
+          await axios.post("http://localhost:3000/users", formData);
+        }
         setSubmitted(true);
       } catch (error) {
         console.error("Error posting user:", error);
       }
-
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    setFormData(getInitialData(initialValues, user));
+  }, [user]);
 
   return (
     <form onSubmit={handleSubmit} style={{ width: "50%" }}>
@@ -107,26 +123,29 @@ const DynamicUserForm: React.FC = () => {
             display: "flex",
             flexDirection: "row",
             columnGap: 3,
+            width: "50%",
           }}
         >
           <Button
             variant="contained"
             color="primary"
             type="submit"
-            sx={{ width: "20%", minWidth: "200px", columnGap: 1 }}
+            sx={{ columnGap: 1, width: "100%" }}
           >
             <div>Submit</div>
             {submitted && <Check />}
             {loading && <CircularProgress size={16} sx={{ color: "white" }} />}
           </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            sx={{ width: "20%", minWidth: "200px", columnGap: 1 }}
-            onClick={() => handleClearForm()}
-          >
-            Clear
-          </Button>
+          {!user && (
+            <Button
+              variant="outlined"
+              color="secondary"
+              sx={{ columnGap: 1, width: "100%" }}
+              onClick={() => handleClearForm()}
+            >
+              Clear
+            </Button>
+          )}
         </div>
       </Box>
     </form>

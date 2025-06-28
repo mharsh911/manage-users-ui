@@ -3,10 +3,14 @@ import {
   DataGrid,
   type GridColDef,
   type GridPaginationModel,
+  type GridRowId,
 } from "@mui/x-data-grid";
 import axios from "axios";
+import { Box, IconButton } from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
-interface IUser {
+export interface IUser {
   id: number;
   firstName: string;
   lastName: string;
@@ -23,6 +27,7 @@ export default function UserList() {
   const [users, setUsers] = useState<IExtendedUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [rowCount, setRowCount] = useState(0);
+  const navigate = useNavigate();
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
@@ -54,6 +59,10 @@ export default function UserList() {
     }
   };
 
+  const handleEditUser = (id: GridRowId) => {
+    navigate(`/edit-user/${id}`);
+  };
+
   useEffect(() => {
     fetchUsers(paginationModel.page, paginationModel.pageSize);
   }, [paginationModel]);
@@ -65,10 +74,39 @@ export default function UserList() {
     { field: "email", headerName: "Email Address", flex: 1 },
     { field: "address", headerName: "Address", flex: 1 },
     { field: "phoneNumber", headerName: "Phone Number", flex: 1 },
+    {
+      field: "actions",
+      headerName: "",
+      flex: 1,
+      align: "center",
+      renderCell: (params) => {
+        console.log(params);
+        const { id } = params;
+        return (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              columnGap: 1,
+              height: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <IconButton onClick={() => handleEditUser(id)}>
+              <Edit fontSize="small" />
+            </IconButton>
+            <IconButton>
+              <Delete fontSize="small" />
+            </IconButton>
+          </Box>
+        );
+      },
+    },
   ];
 
   return (
-    <div style={{ height: 400, width: "100%" }}>
+    <div style={{ width: "100%" }}>
       <DataGrid<IExtendedUser>
         rows={users}
         columns={columns}
@@ -78,6 +116,7 @@ export default function UserList() {
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
         pageSizeOptions={[5, 10, 20]}
+        disableRowSelectionOnClick
       />
     </div>
   );
