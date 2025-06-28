@@ -13,7 +13,7 @@ const BackButton: React.FC<IBackButtonProps> = ({ onClick, text = "Back" }) => {
       onClick={onClick || (() => window.history.back())}
       sx={{
         position: "absolute",
-        top: 16,
+        top: 12,
         left: 16,
         zIndex: 1000,
       }}

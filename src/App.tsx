@@ -7,12 +7,12 @@ function App() {
   return (
     <Box
       sx={{
-        px: 8,
-        py: 4,
+        px: { xs: 2, sm: 4, md: 8 },
+        py: { xs: 2, sm: 4 },
         width: "100%",
         height: "100vh",
         boxSizing: "border-box",
-        overflow: "hidden",
+        overflow: "auto",
       }}
     >
       {element}

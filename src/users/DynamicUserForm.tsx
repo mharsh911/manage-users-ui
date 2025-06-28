@@ -91,8 +91,24 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
   }, [user]);
 
   return (
-    <form onSubmit={handleSubmit} style={{ width: "50%" }}>
-      <Box display="flex" flexDirection="column" gap={3} width="100%">
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        width: { xs: "100%", sm: "80%", md: "60%" },
+        mx: "auto",
+        display: "flex",
+        flexDirection: "column",
+        gap: 3,
+      }}
+    >
+      <Box
+        display="flex"
+        flexDirection="column"
+        gap={3}
+        width="100%"
+        sx={{ flexDirection: { xs: "column", md: "row" } }}
+      >
         {formConfig.map((field: IUserFormSchema) => {
           const Component = field.componet;
           const { type } = field;
@@ -118,12 +134,12 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
             />
           );
         })}
-        <div
-          style={{
+        <Box
+          sx={{
             display: "flex",
-            flexDirection: "row",
-            columnGap: 3,
-            width: "50%",
+            flexDirection: { xs: "column", sm: "row" },
+            gap: 2,
+            width: "100%",
           }}
         >
           <Button
@@ -146,9 +162,9 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
               Clear
             </Button>
           )}
-        </div>
+        </Box>
       </Box>
-    </form>
+    </Box>
   );
 };
 

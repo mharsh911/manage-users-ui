@@ -9,7 +9,7 @@ export const AddUser: FC<{}> = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        rowGap: 2,
+        rowGap: 1,
         width: 1,
         height: 1,
         alignItems: "center",
