@@ -72,11 +72,11 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
       try {
         if (formData.id) {
           await axios.put(
-            `http://localhost:3000/users/${formData.id}`,
+            `${import.meta.env.VITE_SERVER_URL}users/${formData.id}`,
             formData
           );
         } else {
-          await axios.post("http://localhost:3000/users", formData);
+          await axios.post(`${import.meta.env.VITE_SERVER_URL}users`, formData);
         }
         setSubmitted(true);
       } catch (error) {

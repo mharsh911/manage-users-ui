@@ -37,7 +37,7 @@ export default function UserList() {
   const fetchUsers = async (page: number, pageSize: number) => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:3000/users", {
+      const res = await axios.get(`${import.meta.env.VITE_SERVER_URL}users`, {
         params: {
           _page: page + 1,
           _per_page: pageSize,
