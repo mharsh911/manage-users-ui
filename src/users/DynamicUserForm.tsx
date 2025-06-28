@@ -3,6 +3,7 @@ import { Box, Button, CircularProgress } from "@mui/material";
 import type { IUserFormSchema } from "./interfaces";
 import { formConfig } from "./form-schema-config";
 import { Check } from "@mui/icons-material";
+import axios from "axios";
 
 type FormData = Record<string, string>;
 type FormErrors = Record<string, string>;
@@ -48,18 +49,28 @@ const DynamicUserForm: React.FC = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleClearForm = () => {
+    setFormData(initialValues);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validate() && !submitted) {
       setLoading(true);
       console.log("Form Submitted:", formData);
 
-      setTimeout(() => {
-        setLoading(false);
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/users",
+          formData
+        );
+        console.log("User created:", response.data);
         setSubmitted(true);
-      }, 3000);
+      } catch (error) {
+        console.error("Error posting user:", error);
+      }
 
-      // You can clear form here if needed
+      setLoading(false);
     }
   };
 
@@ -91,16 +102,32 @@ const DynamicUserForm: React.FC = () => {
             />
           );
         })}
-        <Button
-          variant="contained"
-          color="primary"
-          type="submit"
-          sx={{ width: "20%", minWidth: "200px", columnGap: 1 }}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            columnGap: 3,
+          }}
         >
-          <div>Submit</div>
-          {submitted && <Check />}
-          {loading && <CircularProgress size={16} sx={{ color: "white" }} />}
-        </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            sx={{ width: "20%", minWidth: "200px", columnGap: 1 }}
+          >
+            <div>Submit</div>
+            {submitted && <Check />}
+            {loading && <CircularProgress size={16} sx={{ color: "white" }} />}
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            sx={{ width: "20%", minWidth: "200px", columnGap: 1 }}
+            onClick={() => handleClearForm()}
+          >
+            Clear
+          </Button>
+        </div>
       </Box>
     </form>
   );

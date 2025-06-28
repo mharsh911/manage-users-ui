@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import type { FC } from "react";
 import DynamicUserForm from "./DynamicUserForm";
+import BackButton from "../components/BackButton";
 
 export const AddUser: FC<{}> = () => {
   return (
@@ -16,6 +17,7 @@ export const AddUser: FC<{}> = () => {
     >
       <Box sx={{ fontSize: "16px", fontWeight: 600 }}>Add New User</Box>
       <DynamicUserForm />
+      <BackButton />
     </Box>
   );
 };

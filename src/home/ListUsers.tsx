@@ -6,15 +6,21 @@ import {
 } from "@mui/x-data-grid";
 import axios from "axios";
 
-interface User {
+interface IUser {
   id: number;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  phone: string;
+  phoneNumber: string;
+  address: string;
+}
+
+interface IExtendedUser extends IUser {
+  index: number;
 }
 
 export default function UserList() {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<IExtendedUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [rowCount, setRowCount] = useState(0);
 
@@ -26,16 +32,21 @@ export default function UserList() {
   const fetchUsers = async (page: number, pageSize: number) => {
     try {
       setLoading(true);
-      const res = await axios.get("https://your-api.com/users", {
+      const res = await axios.get("http://localhost:3000/users", {
         params: {
-          _page: page + 1, // Note: JSON Server is 1-indexed
-          _limit: pageSize,
+          _page: page + 1,
+          _per_page: pageSize,
         },
       });
+      const { data } = res as any;
+      const { data: fetchedUsers, items } = data;
+      const offset = page * pageSize;
+      const userData = fetchedUsers as IUser[];
 
-      setUsers(res.data);
-      const total = Number(res.headers["x-total-count"] || res.data.length);
-      setRowCount(total);
+      setUsers(
+        userData.map((user, index) => ({ ...user, index: offset + index + 1 }))
+      );
+      setRowCount(items);
     } catch (err) {
       console.error("Failed to fetch users", err);
     } finally {
@@ -48,15 +59,17 @@ export default function UserList() {
   }, [paginationModel]);
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 70 },
-    { field: "name", headerName: "Name", flex: 1 },
-    { field: "email", headerName: "Email", flex: 1 },
-    { field: "phone", headerName: "Phone", flex: 1 },
+    { field: "index", headerName: "ID", width: 70 },
+    { field: "firstName", headerName: "Name", flex: 1 },
+    { field: "lastName", headerName: "Name", flex: 1 },
+    { field: "email", headerName: "Email Address", flex: 1 },
+    { field: "address", headerName: "Address", flex: 1 },
+    { field: "phoneNumber", headerName: "Phone Number", flex: 1 },
   ];
 
   return (
     <div style={{ height: 400, width: "100%" }}>
-      <DataGrid
+      <DataGrid<IExtendedUser>
         rows={users}
         columns={columns}
         rowCount={rowCount}

@@ -4,21 +4,21 @@ import { AutocompleteInput } from "../components/AutocompleteInput";
 
 export const formConfig: IUserFormSchema[] = [
   {
-    name: "First name",
+    name: "firstName",
     type: "TextField",
     componet: TextField,
     props: { label: "First name", type: "text", required: true },
     validation: {},
   },
   {
-    name: "Last name",
+    name: "lastName",
     type: "TextField",
     componet: TextField,
     props: { label: "Last name", type: "text", required: true },
     validation: {},
   },
   {
-    name: "Email address",
+    name: "email",
     type: "TextField",
     componet: TextField,
     props: { label: "Email address", type: "email", required: true },
@@ -28,7 +28,7 @@ export const formConfig: IUserFormSchema[] = [
     },
   },
   {
-    name: "Phone number",
+    name: "phoneNumber",
     type: "TextField",
     componet: TextField,
     props: { label: "Phone number", type: "number", required: true },
@@ -38,14 +38,14 @@ export const formConfig: IUserFormSchema[] = [
     },
   },
   {
-    name: "Address",
+    name: "address",
     type: "TextField",
     componet: TextField,
     props: { label: "Address", multiline: true, required: true, minRows: 3 },
     validation: {},
   },
   {
-    name: "Gender",
+    name: "gender",
     componet: AutocompleteInput,
     type: "Autocomplete",
     options: ["Male", "Female", "Others"],
