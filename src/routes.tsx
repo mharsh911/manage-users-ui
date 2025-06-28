@@ -3,6 +3,8 @@ import { Suspense } from "react";
 import { PageNotFound } from "./components/PageNotFound";
 import { Home } from "./home/Home";
 import { RedirectComponent } from "./components/RedirectComponent";
+import { AddUser } from "./users/AddUser";
+import { EditUser } from "./users/EditUser";
 
 export const routes: RouteObject[] = [
   {
@@ -24,6 +26,14 @@ export const routes: RouteObject[] = [
       {
         path: "/home",
         element: <Home />,
+      },
+      {
+        path: "/add-user",
+        element: <AddUser />,
+      },
+      {
+        path: "/edit-user/:userId",
+        element: <EditUser />,
       },
     ],
   },
