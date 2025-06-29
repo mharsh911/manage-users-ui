@@ -6,19 +6,18 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import type { IUserFormSchema } from "./interfaces";
-import { formConfig } from "./form-schema-config";
+import type { TUser, IUserFormSchema } from "../interfaces";
+import { formConfig } from "../form-schema-config";
 import { Check } from "@mui/icons-material";
-import axios from "axios";
+import { userService } from "../user-service";
 
-type FormData = Record<string, string>;
 type FormErrors = Record<string, string>;
 
 interface IDynamicUserFormProps {
-  user?: FormData;
+  user?: TUser;
 }
 
-const getInitialData = (initialValues: FormData, user?: FormData) => {
+const getInitialData = (initialValues: TUser, user?: TUser) => {
   if (user) {
     return user;
   }
@@ -31,12 +30,12 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
   const [loading, setLoading] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const initialValues = formConfig.reduce<FormData>((acc, field) => {
+  const initialValues = formConfig.reduce<TUser>((acc, field) => {
     acc[field.name] = "";
     return acc;
   }, {});
 
-  const [formData, setFormData] = useState<FormData>(initialValues);
+  const [formData, setFormData] = useState<TUser>(initialValues);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,12 +78,9 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
       setLoading(true);
       try {
         if (formData.id) {
-          await axios.put(
-            `${import.meta.env.VITE_SERVER_URL}users/${formData.id}`,
-            formData
-          );
+          await userService.updateUser(formData.id, formData);
         } else {
-          await axios.post(`${import.meta.env.VITE_SERVER_URL}users`, formData);
+          await userService.createUser(formData);
         }
         setSubmitted(true);
       } catch (error) {

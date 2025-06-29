@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 import type { FC } from "react";
-import UserList from "./ListUsers";
+import UserList from "../features/users/components/ListUsers";
 import { useNavigate } from "react-router-dom";
 
 export const Home: FC<{}> = () => {

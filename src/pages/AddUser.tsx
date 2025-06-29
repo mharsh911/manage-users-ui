@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import type { FC } from "react";
-import DynamicUserForm from "./DynamicUserForm";
+import DynamicUserForm from "../features/users/components/DynamicUserForm";
 import BackButton from "../components/BackButton";
 
 export const AddUser: FC<{}> = () => {

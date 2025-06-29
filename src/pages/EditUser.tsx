@@ -1,9 +1,9 @@
 import { Box, LinearProgress } from "@mui/material";
 import { useEffect, useState, type FC } from "react";
-import DynamicUserForm from "./DynamicUserForm";
+import DynamicUserForm from "../features/users/components/DynamicUserForm";
 import BackButton from "../components/BackButton";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import { userService } from "../features/users/user-service";
 
 export const EditUser: FC<{}> = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -13,10 +13,8 @@ export const EditUser: FC<{}> = () => {
   const fetchUser = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}users/${userId}`
-      );
-      setUser(response.data);
+      const response = await userService.getUser(userId || "");
+      setUser(response);
     } catch (error) {
       console.error("Error fetching user:", error);
     } finally {

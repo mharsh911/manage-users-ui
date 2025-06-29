@@ -1,10 +1,10 @@
 import { Outlet, type RouteObject } from "react-router-dom";
 import { Suspense } from "react";
 import { PageNotFound } from "./components/PageNotFound";
-import { Home } from "./home/Home";
+import { Home } from "./pages/Home";
 import { RedirectComponent } from "./components/RedirectComponent";
-import { AddUser } from "./users/AddUser";
-import { EditUser } from "./users/EditUser";
+import { AddUser } from "./pages/AddUser";
+import { EditUser } from "./pages/EditUser";
 
 export const routes: RouteObject[] = [
   {

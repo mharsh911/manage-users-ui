@@ -1,5 +1,5 @@
 import { Autocomplete, TextField } from "@mui/material";
-import type { IUserFormSchema } from "../users/interfaces";
+import type { IUserFormSchema } from "../features/users/interfaces";
 import type { FC } from "react";
 
 interface IAutocompleteInputProps {

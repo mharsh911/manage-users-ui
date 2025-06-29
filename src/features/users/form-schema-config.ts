@@ -1,6 +1,6 @@
 import { TextField } from "@mui/material";
 import type { IUserFormSchema } from "./interfaces";
-import { AutocompleteInput } from "../components/AutocompleteInput";
+import { AutocompleteInput } from "../../components/AutocompleteInput";
 
 export const formConfig: IUserFormSchema[] = [
   {

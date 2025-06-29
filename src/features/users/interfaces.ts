@@ -11,3 +11,10 @@ export interface IUserFormSchema {
   options?: string[] | Record<string, any>[];
   validation: Record<string, any>;
 }
+
+export type TUser = Record<string, any>;
+
+export interface IPaginatedResponse<T> {
+  data: T[];
+  items: number;
+}

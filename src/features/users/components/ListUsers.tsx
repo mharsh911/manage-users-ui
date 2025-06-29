@@ -5,21 +5,14 @@ import {
   type GridPaginationModel,
   type GridRowId,
 } from "@mui/x-data-grid";
-import axios from "axios";
 import { Box, IconButton, useMediaQuery, useTheme } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
-export interface IUser {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  address: string;
-}
+import { userService } from "../user-service";
+import type { TUser } from "../interfaces";
 
-interface IExtendedUser extends IUser {
+interface IExtendedUser extends TUser {
   index: number;
 }
 
@@ -39,19 +32,15 @@ export default function UserList() {
   const fetchUsers = async (page: number, pageSize: number) => {
     try {
       setLoading(true);
-      const res = await axios.get(`${import.meta.env.VITE_SERVER_URL}users`, {
-        params: {
-          _page: page + 1,
-          _per_page: pageSize,
-        },
-      });
-      const { data } = res as any;
-      const { data: fetchedUsers, items } = data;
+      const res = await userService.getUsers(page, pageSize);
+      const { data: fetchedUsers, items } = res;
       const offset = page * pageSize;
-      const userData = fetchedUsers as IUser[];
 
       setUsers(
-        userData.map((user, index) => ({ ...user, index: offset + index + 1 }))
+        fetchedUsers.map((user, index) => ({
+          ...user,
+          index: offset + index + 1,
+        }))
       );
       setRowCount(items);
     } catch (err) {
