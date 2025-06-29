@@ -69,13 +69,6 @@ export default function UserList() {
     fetchUsers(paginationModel.page, paginationModel.pageSize);
   }, [paginationModel]);
 
-  useEffect(() => {
-    setPaginationModel((prev) => ({
-      ...prev,
-      pageSize: isMobile ? 10 : 5,
-    }));
-  }, [isMobile]);
-
   const getColumns = () => {
     const commonColumns: GridColDef[] = [
       { field: "index", headerName: "ID", width: 60 },
@@ -84,6 +77,7 @@ export default function UserList() {
         field: "actions",
         headerName: "Actions",
         flex: 1,
+        headerAlign: "center",
         align: "center",
         renderCell: (params) => {
           const { id } = params;

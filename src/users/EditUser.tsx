@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, LinearProgress } from "@mui/material";
 import { useEffect, useState, type FC } from "react";
 import DynamicUserForm from "./DynamicUserForm";
 import BackButton from "../components/BackButton";
@@ -7,9 +7,11 @@ import axios from "axios";
 
 export const EditUser: FC<{}> = () => {
   const { userId } = useParams<{ userId: string }>();
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<Record<string, string>>({});
 
   const fetchUser = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}users/${userId}`
@@ -17,6 +19,8 @@ export const EditUser: FC<{}> = () => {
       setUser(response.data);
     } catch (error) {
       console.error("Error fetching user:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -36,7 +40,11 @@ export const EditUser: FC<{}> = () => {
       }}
     >
       <Box sx={{ fontSize: "16px", fontWeight: 600 }}>Edit User</Box>
-      <DynamicUserForm user={user} />
+      {loading ? (
+        <LinearProgress sx={{ width: "100%" }} />
+      ) : (
+        <DynamicUserForm user={user} />
+      )}
       <BackButton />
     </Box>
   );

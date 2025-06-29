@@ -145,7 +145,7 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
         <Box
           sx={{
             display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
+            flexDirection: { xs: "row", sm: "row" },
             gap: 2,
             width: { xs: "100%", sm: "50%" },
           }}
