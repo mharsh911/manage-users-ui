@@ -1,9 +1,9 @@
-import type { FormErrors } from "./components/DynamicUserForm";
+import type { IFormErrors } from "./components/DynamicUserForm";
 import { formConfig } from "./form-schema-config";
 import type { TUser } from "./interfaces";
 
 export const getValidationErrors = (formData: TUser) => {
-  const errors: FormErrors = {};
+  const errors: IFormErrors = {};
 
   formConfig.forEach((field) => {
     const value = formData[field.name] ?? "";

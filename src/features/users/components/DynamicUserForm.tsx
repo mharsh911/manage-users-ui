@@ -12,8 +12,9 @@ import { Check } from "@mui/icons-material";
 import { userService } from "../user-service";
 import { toast } from "react-toastify";
 import { getValidationErrors } from "../utils";
+import { FormInputField } from "./FormInputField";
 
-export type FormErrors = Record<string, string>;
+export type IFormErrors = Record<string, string>;
 
 interface IDynamicUserFormProps {
   user?: TUser;
@@ -38,7 +39,7 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
   }, {});
 
   const [formData, setFormData] = useState<TUser>(initialValues);
-  const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [formErrors, setFormErrors] = useState<IFormErrors>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -52,7 +53,7 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
   };
 
   const validate = () => {
-    const errors: FormErrors = getValidationErrors(formData);
+    const errors: IFormErrors = getValidationErrors(formData);
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -62,29 +63,35 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
   };
 
   const updateUser = async () => {
-    await userService.updateUser(formData.id, formData);
-    toast.success("Updated user detail successfully!");
+    try {
+      await userService.updateUser(formData.id, formData);
+      toast.success("Updated user detail successfully!");
+    } catch (error) {
+      console.error("Error updating user:", error);
+      toast.error("Error in updating user!");
+    }
   };
 
   const createUser = async () => {
-    await userService.createUser(formData);
-    toast.success("Created user successfully!");
+    try {
+      await userService.createUser(formData);
+      toast.success("Created user successfully!");
+    } catch (error) {
+      console.error("Error creating user:", error);
+      toast.error("Error in creating user!");
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validate() && !submitted) {
       setLoading(true);
-      try {
-        if (formData.id) {
-          await updateUser();
-        } else {
-          await createUser();
-        }
-        setSubmitted(true);
-      } catch (error) {
-        console.error("Error posting user:", error);
+      if (formData.id) {
+        await updateUser();
+      } else {
+        await createUser();
       }
+      setSubmitted(true);
       setLoading(false);
     }
   };
@@ -113,27 +120,13 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
         sx={{ flexDirection: { xs: "column", md: "column" } }}
       >
         {formConfig.map((field: IUserFormSchema) => {
-          const Component = field.componet;
-          const { type } = field;
-          if (type === "Autocomplete") {
-            return (
-              <Component
-                field={field}
-                value={formData[field.name]}
-                setValue={handleSelectChange}
-              />
-            );
-          }
           return (
-            <Component
-              key={field.name}
-              name={field.name}
+            <FormInputField
+              field={field}
               value={formData[field.name]}
-              onChange={handleChange}
-              error={Boolean(formErrors[field.name])}
-              helperText={formErrors[field.name]}
-              fullWidth
-              {...field.props}
+              formErrors={formErrors}
+              onSelectInputChange={handleSelectChange}
+              onTextInputChange={handleChange}
             />
           );
         })}

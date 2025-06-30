@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
 import {
   DataGrid,
-  type GridColDef,
   type GridPaginationModel,
   type GridRowId,
 } from "@mui/x-data-grid";
-import { Box, IconButton, useMediaQuery, useTheme } from "@mui/material";
-import { Delete, Edit } from "@mui/icons-material";
+import { useMediaQuery, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import { userService } from "../user-service";
 import type { TUser } from "../interfaces";
 import { DeleteUserConfirmation } from "./DeleteUserConfirmation";
+import { useUserColumns } from "../hooks/useUserColumns";
 
 interface IExtendedUser extends TUser {
   index: number;
@@ -38,13 +37,11 @@ export default function UserList() {
       const res = await userService.getUsers(page, pageSize);
       const { data: fetchedUsers, items } = res;
       const offset = page * pageSize;
-
-      setUsers(
-        fetchedUsers.map((user, index) => ({
-          ...user,
-          index: offset + index + 1,
-        }))
-      );
+      const mappedUsers = fetchedUsers.map((user, index) => ({
+        ...user,
+        index: offset + index + 1,
+      }));
+      setUsers(mappedUsers);
       setRowCount(items);
     } catch (err) {
       console.error("Failed to fetch users", err);
@@ -65,69 +62,18 @@ export default function UserList() {
     fetchUsers(paginationModel.page, paginationModel.pageSize);
   }, [paginationModel]);
 
-  const getColumns = () => {
-    const commonColumns: GridColDef[] = [
-      { field: "index", headerName: "ID", width: 60 },
-      { field: "firstName", headerName: "Name", flex: 1 },
-      {
-        field: "actions",
-        headerName: "",
-        flex: 1,
-        headerAlign: "center",
-        align: "center",
-        disableColumnMenu: true,
-        disableReorder: true,
-        sortable: false,
-        renderCell: (params) => {
-          const { id, row } = params;
-          return (
-            <Box
-              sx={{
-                display: "flex",
-                gap: 1,
-                weight: 1,
-                height: 1,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <IconButton onClick={() => handleEditUser(id)}>
-                <Edit fontSize="small" />
-              </IconButton>
-              <IconButton>
-                <Delete
-                  fontSize="small"
-                  onClick={() => {
-                    setOpenDeleteModal(true);
-                    setSelectedUser(row);
-                  }}
-                />
-              </IconButton>
-            </Box>
-          );
-        },
-      },
-    ];
-
-    const fullColumns: GridColDef[] = [
-      ...commonColumns.slice(0, 2), // index + firstName
-      { field: "lastName", headerName: "Last Name", flex: 1 },
-      { field: "email", headerName: "Email", flex: 1 },
-      { field: "address", headerName: "Address", flex: 1 },
-      { field: "phoneNumber", headerName: "Phone", flex: 1 },
-      ...commonColumns.slice(2), // actions
-    ];
-
-    const columns = isMobile ? commonColumns : fullColumns;
-
-    return columns;
-  };
+  const columns = useUserColumns({
+    isMobile,
+    handleEditUser,
+    setOpenDeleteModal,
+    setSelectedUser,
+  });
 
   return (
     <div style={{ width: "100%" }}>
       <DataGrid<IExtendedUser>
         rows={users}
-        columns={getColumns()}
+        columns={columns}
         rowCount={rowCount}
         loading={loading}
         paginationMode="server"
