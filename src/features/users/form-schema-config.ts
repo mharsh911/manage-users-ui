@@ -8,14 +8,20 @@ export const formConfig: IUserFormSchema[] = [
     type: "TextField",
     componet: TextField,
     props: { label: "First name", type: "text", required: true },
-    validation: {},
+    validation: {
+      minLength: 2,
+      maxLength: 50,
+    },
   },
   {
     name: "lastName",
     type: "TextField",
     componet: TextField,
     props: { label: "Last name", type: "text", required: true },
-    validation: {},
+    validation: {
+      minLength: 2,
+      maxLength: 50,
+    },
   },
   {
     name: "email",
@@ -42,7 +48,10 @@ export const formConfig: IUserFormSchema[] = [
     type: "TextField",
     componet: TextField,
     props: { label: "Address", multiline: true, required: true, minRows: 3 },
-    validation: {},
+    validation: {
+      minLength: 2,
+      maxLength: 500,
+    },
   },
   {
     name: "gender",

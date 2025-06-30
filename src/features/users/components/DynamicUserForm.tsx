@@ -11,8 +11,9 @@ import { formConfig } from "../form-schema-config";
 import { Check } from "@mui/icons-material";
 import { userService } from "../user-service";
 import { toast } from "react-toastify";
+import { getValidationErrors } from "../utils";
 
-type FormErrors = Record<string, string>;
+export type FormErrors = Record<string, string>;
 
 interface IDynamicUserFormProps {
   user?: TUser;
@@ -51,20 +52,7 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
   };
 
   const validate = () => {
-    const errors: FormErrors = {};
-
-    formConfig.forEach((field) => {
-      const value = formData[field.name];
-      if (field.props.required && !value) {
-        errors[field.name] = `${field.props.label} is required`;
-      } else if (
-        field.validation?.pattern &&
-        !field.validation.pattern.test(value)
-      ) {
-        errors[field.name] = field.validation.errorMessage || "Invalid input";
-      }
-    });
-
+    const errors: FormErrors = getValidationErrors(formData);
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -73,17 +61,25 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
     setFormData(initialValues);
   };
 
+  const updateUser = async () => {
+    await userService.updateUser(formData.id, formData);
+    toast.success("Updated user detail successfully!");
+  };
+
+  const createUser = async () => {
+    await userService.createUser(formData);
+    toast.success("Created user successfully!");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validate() && !submitted) {
       setLoading(true);
       try {
         if (formData.id) {
-          await userService.updateUser(formData.id, formData);
-          toast.success("Updated user detail successfully!");
+          await updateUser();
         } else {
-          await userService.createUser(formData);
-          toast.success("Created user successfully!");
+          await createUser();
         }
         setSubmitted(true);
       } catch (error) {
