@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 import { userService } from "../user-service";
 import type { TUser } from "../interfaces";
+import { DeleteUserConfirmation } from "./DeleteUserConfirmation";
 
 interface IExtendedUser extends TUser {
   index: number;
@@ -20,6 +21,8 @@ export default function UserList() {
   const [users, setUsers] = useState<IExtendedUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [rowCount, setRowCount] = useState(0);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState({});
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -54,6 +57,10 @@ export default function UserList() {
     navigate(`/edit-user/${id}`);
   };
 
+  const handleCloseDeleteModal = () => {
+    setOpenDeleteModal(false);
+  };
+
   useEffect(() => {
     fetchUsers(paginationModel.page, paginationModel.pageSize);
   }, [paginationModel]);
@@ -64,19 +71,37 @@ export default function UserList() {
       { field: "firstName", headerName: "Name", flex: 1 },
       {
         field: "actions",
-        headerName: "Actions",
+        headerName: "",
         flex: 1,
         headerAlign: "center",
         align: "center",
+        disableColumnMenu: true,
+        disableReorder: true,
+        sortable: false,
         renderCell: (params) => {
-          const { id } = params;
+          const { id, row } = params;
           return (
-            <Box sx={{ display: "flex", gap: 1, justifyContent: "center" }}>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1,
+                weight: 1,
+                height: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <IconButton onClick={() => handleEditUser(id)}>
                 <Edit fontSize="small" />
               </IconButton>
               <IconButton>
-                <Delete fontSize="small" />
+                <Delete
+                  fontSize="small"
+                  onClick={() => {
+                    setOpenDeleteModal(true);
+                    setSelectedUser(row);
+                  }}
+                />
               </IconButton>
             </Box>
           );
@@ -112,6 +137,14 @@ export default function UserList() {
         initialState={{}}
         disableRowSelectionOnClick
       />
+      {openDeleteModal && (
+        <DeleteUserConfirmation
+          open={openDeleteModal}
+          handleModal={handleCloseDeleteModal}
+          user={selectedUser}
+          fetchUsers={fetchUsers}
+        />
+      )}
     </div>
   );
 }

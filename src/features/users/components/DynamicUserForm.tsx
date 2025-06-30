@@ -10,6 +10,7 @@ import type { TUser, IUserFormSchema } from "../interfaces";
 import { formConfig } from "../form-schema-config";
 import { Check } from "@mui/icons-material";
 import { userService } from "../user-service";
+import { toast } from "react-toastify";
 
 type FormErrors = Record<string, string>;
 
@@ -79,8 +80,10 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
       try {
         if (formData.id) {
           await userService.updateUser(formData.id, formData);
+          toast.success("Updated user detail successfully!");
         } else {
           await userService.createUser(formData);
+          toast.success("Created user successfully!");
         }
         setSubmitted(true);
       } catch (error) {

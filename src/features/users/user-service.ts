@@ -42,6 +42,10 @@ class UserService {
     const res = await this.http.get(`${this.endpoint}/${id}`);
     return res.data;
   }
+
+  async deleteUser(id: string) {
+    await this.http.delete(`${this.endpoint}/${id}`);
+  }
 }
 
 export const userService = new UserService();

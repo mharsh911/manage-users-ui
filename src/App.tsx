@@ -1,6 +1,7 @@
 import { useRoutes } from "react-router-dom";
 import { routes } from "./routes";
 import { Box } from "@mui/material";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const element = useRoutes(routes);
@@ -16,6 +17,7 @@ function App() {
       }}
     >
       {element}
+      <ToastContainer />
     </Box>
   );
 }
