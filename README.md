@@ -23,7 +23,7 @@ A simple React application to manage user data with basic CRUD (Create, Read, Up
 
 ## Getting Started
 
-### 1. Clone the repository
+### Clone the repository
 
 ```bash
 git clone https://github.com/your-username/manage-users-app.git
