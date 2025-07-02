@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FC } from "react";
 import {
   DataGrid,
   type GridPaginationModel,
@@ -16,7 +16,7 @@ interface IExtendedUser extends TUser {
   index: number;
 }
 
-export default function UserList() {
+export const UserList: FC<{}> = () => {
   const [users, setUsers] = useState<IExtendedUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [rowCount, setRowCount] = useState(0);
@@ -28,7 +28,7 @@ export default function UserList() {
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
-    pageSize: 5,
+    pageSize: 10,
   });
 
   const fetchUsers = async (page: number, pageSize: number) => {
@@ -79,7 +79,7 @@ export default function UserList() {
         paginationMode="server"
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
-        pageSizeOptions={[5, 10, 20]}
+        pageSizeOptions={[10, 20, 50]}
         initialState={{}}
         disableRowSelectionOnClick
       />
@@ -93,4 +93,4 @@ export default function UserList() {
       )}
     </div>
   );
-}
+};

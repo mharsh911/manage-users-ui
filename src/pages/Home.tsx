@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material";
 import type { FC } from "react";
-import UserList from "../features/users/components/ListUsers";
 import { useNavigate } from "react-router-dom";
+import { UserList } from "../features/users/components/ListUsers";
 
 export const Home: FC<{}> = () => {
   const navigate = useNavigate();
@@ -21,6 +21,8 @@ export const Home: FC<{}> = () => {
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
+          paddingBottom: "8px",
+          borderBottom: "1px solid rgba(211, 211, 211, 1)",
         }}
       >
         <div style={{ fontSize: "16px", fontWeight: 600 }}>Manage Users</div>
