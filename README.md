@@ -82,7 +82,7 @@ Insert a new object in the formConfig array. For example, to add a username fiel
 }
 ```
 
-## ⚠️ Important points
+## 📌 Important points
 
 1. **name** should be the field name from the user object that will be saved on backend, it is a good practice to keep this camel cased.
 
