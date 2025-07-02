@@ -58,8 +58,9 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleClearForm = () => {
+  const handleRestForm = () => {
     setFormData(initialValues);
+    setSubmitted(false);
   };
 
   const updateUser = async () => {
@@ -144,7 +145,7 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
             type="submit"
             sx={{ columnGap: 1, width: !user || isMobile ? "100%" : "50%" }}
           >
-            <div>Submit</div>
+            <div>{submitted ? "Submitted" : "Submit"}</div>
             {submitted && <Check />}
             {loading && <CircularProgress size={16} sx={{ color: "white" }} />}
           </Button>
@@ -153,9 +154,9 @@ const DynamicUserForm: React.FC<IDynamicUserFormProps> = (props) => {
               variant="outlined"
               color="secondary"
               sx={{ columnGap: 1, width: "100%" }}
-              onClick={() => handleClearForm()}
+              onClick={() => handleRestForm()}
             >
-              Clear
+              Reset
             </Button>
           )}
         </Box>
