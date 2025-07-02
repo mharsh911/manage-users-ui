@@ -33,6 +33,12 @@ npm i
 npm run dev
 ```
 
+### Add this to .env for api url
+
+```
+VITE_SERVER_URL=https://json-mock-api-ggav.onrender.com/
+```
+
 ## 🧩 Adding a New Form Field
 
 This app uses a config-driven form schema (`formConfig`) to define form fields. Adding a new field is easy and doesn't require modifying form logic.
