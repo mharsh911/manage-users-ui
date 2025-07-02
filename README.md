@@ -76,6 +76,16 @@ Insert a new object in the formConfig array. For example, to add a username fiel
 }
 ```
 
+## ⚠️ Important points
+
+1. **name** should be the field name from the user object that will be saved on backend, it is a good practice to keep this camel cased.
+
+2. **props** are mui text field props, so we have complete control over the ui.
+
+3. **options** are mui autocomplete options, only for autocomplete fields.
+
+4. **component** can be any component either mui or custom made. Keep the new component under src/components, and refer it in the config.
+
 That’s it! Your new field will automatically appear in both the Add User and Edit User forms.
 
 ## ⚠️ Limitations & Assumptions
